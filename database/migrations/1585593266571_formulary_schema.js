@@ -24,7 +24,7 @@ class FormularySchema extends Schema {
       table
         .foreign('curriculum_id')
         .references('id')
-        .inTable('curriculums')
+        .inTable('curricula')
         .onDelete('cascade')
     })
   }

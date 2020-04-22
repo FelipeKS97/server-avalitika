@@ -5,7 +5,7 @@ const Schema = use('Schema')
 
 class CurriculumSchema extends Schema {
   up () {
-    this.create('curriculums', (table) => {
+    this.create('curricula', (table) => {
       table.increments()
       table.string('name', 255)
       table.integer('course_id').unsigned()
@@ -20,7 +20,7 @@ class CurriculumSchema extends Schema {
   }
 
   down () {
-    this.drop('curriculums')
+    this.drop('curricula')
   }
 }
 

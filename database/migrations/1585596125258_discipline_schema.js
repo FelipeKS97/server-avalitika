@@ -8,13 +8,14 @@ class DisciplineSchema extends Schema {
     this.create('disciplines', (table) => {
       table.increments()
       table.string('name', 100)
+      table.string('slug', 100)
       table.integer('curriculum_id').unsigned()
       table.timestamps()
 
       table
         .foreign('curriculum_id')
         .references('id')
-        .inTable('curriculums')
+        .inTable('curricula')
         .onDelete('cascade')
     })
   }
