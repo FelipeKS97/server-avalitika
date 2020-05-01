@@ -23,4 +23,4 @@ const Route = use('Route')
 /**
  * Importa as rotas do User Coordenador
  */
-require('./coordinator')
+require('./coordination')
