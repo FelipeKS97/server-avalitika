@@ -13,6 +13,8 @@ class FormularySchema extends Schema {
       table.json('json_format')
       table.integer('period_id').unsigned()
       table.integer('curriculum_id').unsigned()
+      table.datetime('published_at')
+      table.datetime('published_until')
       table.timestamps()
 
       table

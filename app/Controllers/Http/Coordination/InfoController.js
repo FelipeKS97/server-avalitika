@@ -14,12 +14,9 @@ class InfoController {
    * @param {TransformWith} ctx.transform
    * @param { Object } ctx.pagination
    */
-  async index({ response }) {
-    // const { page, limit } = pagination
+  async getInfo({ response }) {
     const query = Period.query()
-    
     query.where('status', 1)
-
     const period = await query.fetch()
 
     return response.send(period)

@@ -5,7 +5,6 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Formulary = use('App/Models/Formulary')
-const Period = use('App/Models/Period')
 
 /**
  * Resourceful controller for interacting with forms
@@ -34,7 +33,7 @@ class FormController {
     }
     
     let formularies = await query.paginate(page, limit)
-   // formularies = await transform.paginate(formularies, Transformer)
+    //formularies = await transform.paginate(formularies, Transformer)
 
     return response.send(formularies)
   }
@@ -48,18 +47,59 @@ class FormController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    try {
+      const { 
+        period_id, 
+        curriculum_id, 
+        title, 
+        is_general_form, 
+        json_format
+      } = request.all()
+
+      let published_at = null
+      const published_until = null
+      const format = JSON.stringify(json_format)
+
+      // if(status) {
+      //   published_at = new Date.getTime()
+      // }
+
+      let formulary = await Formulary.create({ 
+        period_id, 
+        curriculum_id, 
+        title, 
+        is_general_form, 
+        json_format: format,
+        published_at,
+        published_until
+      })
+      //formulary = await transform.item(formulary, Transformer)
+      return response.status(201).send(formulary)
+
+    } catch (error) {
+
+      console.log(error)
+
+      return response.status(400).send({
+        message: "Erro ao processar solicitação."
+      })
+    }
   }
 
-  /**
-   * Display a single form.
+
+    /**
+   * Display a single category.
    * GET forms/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {TranformWith} ctx.transform
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params: { id },  response }) {
+    let formulary = await Formulary.findOrFail(id)
+   // formulary = await transform.item(formulary, Transformer)
+    return response.send(formulary)
   }
 
 
@@ -71,7 +111,46 @@ class FormController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params: { id }, request, response }) {
+    let formulary = await Formulary.findOrFail(id)
+
+    if(formulary.published_at || formulary.status === 1) {
+      return response.status(400).send({
+        message: "Erro ao processar solicitação: Formulário já foi publicado."
+      })
+    } else {
+
+      try {
+        const { 
+          curriculum_id, 
+          title, 
+          is_general_form, 
+          status,
+          json_format
+        } = request.all()
+
+        const format = JSON.stringify(json_format)
+
+        formulary.merge({ 
+          curriculum_id, 
+          title, 
+          is_general_form, 
+          status,
+          json_format: format
+        })
+
+        await formulary.save()
+        // formulary = await transform.item(formulary, Transformer)
+        
+        return response.send(formulary)
+        
+      } catch (error) {
+        
+        return response.status(400).send({
+          message: "Erro ao processar solicitação."
+        })    
+      }
+    }
   }
 
   /**
@@ -82,7 +161,106 @@ class FormController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params: { id }, response }) {
+    
+    const formulary = await Formulary.findOrFail(id)
+
+    if(formulary.status === 1 || formulary.published_at) {
+      return response.status(400).send({
+        message: "Erro ao processar solicitação: Formulário já foi publicado."
+      })
+    } else {
+      
+      try {
+        await formulary.delete()
+        return response.status(204).send()
+        
+      } catch(error) {
+        
+        return response.status(500).send({
+          message: "Erro ao processar solicitação."
+        })  
+      }
+    }
+  }
+
+
+  /**
+   * Update form publish date.
+   * PUT or PATCH forms/:id/publish
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async publishForm ({ params: { id }, response }) {
+    let formulary = await Formulary.findOrFail(id)
+
+    if(formulary.status === 1) {
+      return response.status(400).send({
+        message: "Erro ao processar solicitação: Formulário já foi publicado."
+      })
+    } else {
+
+      try {
+
+        const published_at = new Date().getTime()
+
+        formulary.merge({ 
+          published_at, 
+          published_until: null, 
+          status: true 
+        })
+
+        await formulary.save()
+        // formulary = await transform.item(formulary, Transformer)
+
+        return response.send(formulary)
+      } catch (error) {
+
+        console.log(error)
+        
+        return response.status(400).send({
+          message: "Erro ao processar solicitação."
+        })    
+      }
+    }
+  }
+
+
+  /**
+   * Update form unpublish date.
+   * PUT or PATCH forms/:id/unpublish
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async unpublishForm ({ params: { id }, response }) {
+    let formulary = await Formulary.findOrFail(id)
+
+    if(formulary.status === 0) {
+      return response.status(400).send({
+        message: "Erro ao processar solicitação: Retirada da publicação do formulário já foi feita."
+      })
+    } else {
+
+      try {
+
+        const published_until = new Date().getTime()
+        formulary.merge({ published_until, status: false })
+
+        await formulary.save()
+        // formulary = await transform.item(formulary, Transformer)
+
+        return response.send(formulary)
+      } catch (error) {
+        
+        return response.status(400).send({
+          message: "Erro ao processar solicitação."
+        })    
+      }
+    }
   }
 }
 
