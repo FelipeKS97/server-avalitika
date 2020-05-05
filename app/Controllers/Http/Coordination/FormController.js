@@ -5,6 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Formulary = use('App/Models/Formulary')
+const Answer = use('App/Models/Answer')
 
 /**
  * Resourceful controller for interacting with forms
@@ -88,7 +89,7 @@ class FormController {
 
 
     /**
-   * Display a single category.
+   * Display a single form.
    * GET forms/:id
    *
    * @param {object} ctx
@@ -261,6 +262,46 @@ class FormController {
         })    
       }
     }
+  }
+
+
+   /**
+   * Show a list of all formulary answers.
+   * GET formulary/:id/answers
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {object} ctx.pagination
+   */
+
+  async listAnswers ({ request, response, pagination }) {
+    const { page, limit } = pagination
+    const { formulary_id } = request.all()
+    const query = Answer.query()
+
+    if(formulary_id) {
+      query.where('formulary_id', formulary_id)
+    }
+    let answers = await query.paginate(page, limit)
+   
+    return response.send(answers)
+  }
+
+
+    /**
+   * Display a single form answer.
+   * GET formulary/answer/:id
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {TranformWith} ctx.transform
+   */
+  async showAnswer ({ params: { id },  response }) {
+    let answer = await Answer.findOrFail(id)
+   // answer = await transform.item(formulary, Transformer)
+    return response.send(answer)
   }
 }
 

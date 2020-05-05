@@ -24,3 +24,8 @@ const Route = use('Route')
  * Importa as rotas do User Coordenador
  */
 require('./coordination')
+
+/**
+ * Importa as rotas de Estudante
+ */
+require('./student')
