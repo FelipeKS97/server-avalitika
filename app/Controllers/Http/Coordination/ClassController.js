@@ -11,7 +11,7 @@ class ClassController {
 
   /**
    * Create/save a new set of classes.
-   * POST classes/store
+   * POST classes
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -20,8 +20,6 @@ class ClassController {
   async storeClasses ({ request, response }) {
 
     const trx = await Database.beginTransaction()
-
-    let updatedClasses = []
 
     try {
       const { 
@@ -49,14 +47,12 @@ class ClassController {
           return response.status(400).send({
             message: "Erro ao processar solicitação."
           })
-
         }
       }))
 
       let insertData = classes.map(c => {  
         return { ...c, period_id } 
       })
-
       let newClasses = await Class.createMany(insertData)
 
       return response.status(201).send(newClasses)
@@ -70,7 +66,33 @@ class ClassController {
     }
   }
 
-    /**
+  /**
+   * Show a list of all disciplines.
+   * GET classes
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {TransformWith} ctx.transform
+   * @param {Object} ctx.pagination
+   */
+  async getClasses({ request, response, pagination }) {
+    const { page, limit } = pagination
+    const { 
+      disc_array, 
+      period_id
+    } = request.all()
+        
+    let results = await Database
+      .from('classes')
+      .whereIn('discipline_id', disc_array)
+      .andWhere('period_id', period_id)
+      .andWhere('is_inactive', false)
+      
+    return response.send(results)
+  }
+
+  /**
    * Show a list of all disciplines.
    * GET disciplines
    *
@@ -130,9 +152,6 @@ class ClassController {
 
     return response.send(results)
   }
-
-
-
 }
 
 module.exports = ClassController

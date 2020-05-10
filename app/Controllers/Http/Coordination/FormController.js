@@ -194,7 +194,7 @@ class FormController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async publishForm ({ params: { id }, response }) {
+  async publish ({ params: { id }, response }) {
     let formulary = await Formulary.findOrFail(id)
 
     if(formulary.status === 1) {
@@ -237,7 +237,7 @@ class FormController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async unpublishForm ({ params: { id }, response }) {
+  async unpublish({ params: { id }, response }) {
     let formulary = await Formulary.findOrFail(id)
 
     if(formulary.status === 0) {
@@ -275,13 +275,12 @@ class FormController {
    * @param {object} ctx.pagination
    */
 
-  async listAnswers ({ request, response, pagination }) {
+  async listAnswers ({ params: { id } , response, pagination }) {
     const { page, limit } = pagination
-    const { formulary_id } = request.all()
     const query = Answer.query()
 
-    if(formulary_id) {
-      query.where('formulary_id', formulary_id)
+    if(id) {
+      query.where('formulary_id', id)
     }
     let answers = await query.paginate(page, limit)
    

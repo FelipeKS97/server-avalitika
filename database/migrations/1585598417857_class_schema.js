@@ -10,6 +10,7 @@ class ClassSchema extends Schema {
       table.integer('period_id').unsigned()
       table.integer('professor_id').unsigned()
       table.boolean('is_inactive').defaultTo(false)
+      table.string('prof_name', 254).notNullable()
       table.timestamps()
 
       table
