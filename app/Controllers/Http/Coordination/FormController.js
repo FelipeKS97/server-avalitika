@@ -6,6 +6,8 @@
 
 const Formulary = use('App/Models/Formulary')
 const Answer = use('App/Models/Answer')
+const Transformer = ('App/Transformers/Coordination/FormTransformer')
+const AnswerTransformer = ('App/Transformers/Coordination/AnswerTransformer')
 
 /**
  * Resourceful controller for interacting with forms
@@ -20,7 +22,7 @@ class FormController {
    * @param {Response} ctx.response
    * @param {object} ctx.pagination
    */
-  async index ({ request, response, pagination }) {
+  async index ({ request, response, pagination, transform }) {
     const { page, limit } = pagination
 
     const { period_id, curriculum_id } = request.all()
@@ -34,7 +36,7 @@ class FormController {
     }
     
     let formularies = await query.paginate(page, limit)
-    //formularies = await transform.paginate(formularies, Transformer)
+    formularies = await transform.paginate(formularies, Transformer)
 
     return response.send(formularies)
   }
@@ -47,7 +49,7 @@ class FormController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ request, response, transform }) {
     try {
       const { 
         period_id, 
@@ -74,7 +76,7 @@ class FormController {
         published_at,
         published_until
       })
-      //formulary = await transform.item(formulary, Transformer)
+      formulary = await transform.item(formulary, Transformer)
       return response.status(201).send(formulary)
 
     } catch (error) {
@@ -97,9 +99,9 @@ class FormController {
    * @param {Response} ctx.response
    * @param {TranformWith} ctx.transform
    */
-  async show ({ params: { id },  response }) {
+  async show ({ params: { id },  response, transform}) {
     let formulary = await Formulary.findOrFail(id)
-   // formulary = await transform.item(formulary, Transformer)
+    formulary = await transform.item(formulary, Transformer)
     return response.send(formulary)
   }
 
@@ -112,7 +114,7 @@ class FormController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params: { id }, request, response }) {
+  async update ({ params: { id }, request, response, transform }) {
     let formulary = await Formulary.findOrFail(id)
 
     if(formulary.published_at || formulary.status === 1) {
@@ -141,7 +143,7 @@ class FormController {
         })
 
         await formulary.save()
-        // formulary = await transform.item(formulary, Transformer)
+        formulary = await transform.item(formulary, Transformer)
         
         return response.send(formulary)
         
@@ -275,7 +277,7 @@ class FormController {
    * @param {object} ctx.pagination
    */
 
-  async listAnswers ({ params: { id } , response, pagination }) {
+  async listAnswers ({ params: { id } , response, pagination, transform }) {
     const { page, limit } = pagination
     const query = Answer.query()
 
@@ -283,6 +285,7 @@ class FormController {
       query.where('formulary_id', id)
     }
     let answers = await query.paginate(page, limit)
+    answers = await transform.paginate(answers, AnswerTransformer)
    
     return response.send(answers)
   }
@@ -297,9 +300,9 @@ class FormController {
    * @param {Response} ctx.response
    * @param {TranformWith} ctx.transform
    */
-  async showAnswer ({ params: { id },  response }) {
+  async showAnswer ({ params: { id },  response, transform }) {
     let answer = await Answer.findOrFail(id)
-   // answer = await transform.item(formulary, Transformer)
+    answer = await transform.include('formulary').item(answer, AnswerTransformer)
     return response.send(answer)
   }
 }

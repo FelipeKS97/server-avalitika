@@ -6,6 +6,7 @@ const Schema = use('Schema')
 class ClassSchema extends Schema {
   up () {
     this.create('classes', (table) => {
+      table.string('id').unique().notNullable().primary()
       table.integer('discipline_id').unsigned()
       table.integer('period_id').unsigned()
       table.integer('professor_id').unsigned()

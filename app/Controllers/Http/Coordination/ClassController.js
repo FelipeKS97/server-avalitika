@@ -24,17 +24,40 @@ class ClassController {
     try {
       const { 
         period_id, 
-        classes
+        classes,
+        disc_array
       } = request.all()
+
+      if(classes.length < 1 && disc_array) {
+        // console.log('vc mandou um array vazio, quer que eu exclua tudo?')
+        await Promise.all(disc_array.map(async d => {
+          try {
+            let foundClass = Class.query()
+            foundClass
+              .where('period_id', period_id)
+              .andWhere('discipline_id', d)
+              .andWhere('is_inactive', false)
+              
+            await foundClass.delete()
+            await trx.commit()
+          } catch(error) {
+            await trx.rollback()
+            return response.status(400).send({
+              message: "Erro ao processar solicitação."
+            })
+          }
+        }))
+        return response.send([])
+      } else {
       
-      await Promise.all(classes.map(async c => {
+      await Promise.all(disc_array.map(async c => {
         try {
 
           let foundClass = Class.query()
           
           foundClass
             .where('period_id', period_id)
-            .andWhere('discipline_id', c.discipline_id)
+            .andWhere('discipline_id', c)
             .andWhere('is_inactive', false)
 
           await foundClass.delete()
@@ -50,12 +73,15 @@ class ClassController {
         }
       }))
 
-      let insertData = classes.map(c => {  
-        return { ...c, period_id } 
+      let insertData = classes.map(c => {
+        let unifiedID = `${period_id}${c.discipline_id}${c.professor_id}`
+        console.log(unifiedID)  
+        return { ...c, period_id, id: unifiedID }
       })
       let newClasses = await Class.createMany(insertData)
 
       return response.status(201).send(newClasses)
+    }
 
     } catch (error) {
 
@@ -109,7 +135,7 @@ class ClassController {
     
     query.where('curriculum_id', cID)
     
-    let disciplines = await query.paginate(page, limit)
+    let disciplines = await query.fetch() //.paginate(page, limit)
     //disciplines = await transform.paginate(disciplines, Transformer)
     
     return response.send(disciplines)
@@ -133,7 +159,7 @@ class ClassController {
     
     query.where('course_id', cID)
     
-    let curricula = await query.paginate(page, limit)
+    let curricula = await query.fetch() //.paginate(page, limit)
     //curricula = await transform.paginate(curricula, Transformer)
     
     return response.send(curricula)
@@ -141,15 +167,20 @@ class ClassController {
 
   async listProfessors ({ request, response, pagination }) {
     // const { page, limit } = pagination
-
+    let results
     const fullname = request.input('fullname')
-
-    let results = await Database
-      .select('*')
+    if(fullname) {
+      results = await Database
+      .select('user_id', 'name', 'fullname', 'email')
       .from('users')
       .where('fullname', 'LIKE', `%${fullname}%`)
       .leftJoin('professors', 'users.id', 'professors.user_id')
-
+    } else {
+      results = await Database
+      .select('user_id', 'name', 'fullname', 'email')
+      .from('users')
+      .leftJoin('professors', 'users.id', 'professors.user_id')
+    }
     return response.send(results)
   }
 }

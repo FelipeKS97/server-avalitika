@@ -171,6 +171,8 @@ class StudentController {
         json_answer
       } = request.all()
 
+      let unifiedID = `${period_id}${discipline_id}${professor_id}`
+
       
     //   let results = await Database
     //     .select('*')
@@ -186,8 +188,18 @@ class StudentController {
     //   }
 
       const format = JSON.stringify(json_answer)
+      console.log({
+        class_id: unifiedID,
+        period_id, 
+        discipline_id, 
+        formulary_id, 
+        professor_id,
+        verification_id, 
+        json_answer: format,
+      })
 
-      let answer = await Answer.create({ 
+      let answer = await Answer.create({
+        class_id: unifiedID,
         period_id, 
         discipline_id, 
         formulary_id, 

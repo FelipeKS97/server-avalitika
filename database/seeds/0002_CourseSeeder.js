@@ -60,6 +60,12 @@ class CourseSeeder {
         slug: 'MATB',
         curriculum_id: curriculum2.id
     })
+
+    const discipline5 = await Discipline.create({
+        name: 'Fundamentos de Banco de Dados',
+        slug: 'FNBD',
+        curriculum_id: curriculum1.id
+    })
     
     const period = await Period.create({
         description: '2020.1',
