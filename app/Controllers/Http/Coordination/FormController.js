@@ -29,11 +29,20 @@ class FormController {
     
     const query = Formulary.query()
 
-    if(period_id && curriculum_id) {
+    if(period_id) {
       query
         .where('period_id', period_id)
+    }
+
+    if(curriculum_id) {
+      query
         .where('curriculum_id', curriculum_id)
     }
+
+    // if(curriculum_id) {
+    //   query
+    //     .where('curriculum_id', curriculum_id)
+    // }
     
     let formularies = await query.paginate(page, limit)
     formularies = await transform.paginate(formularies, Transformer)
@@ -80,8 +89,6 @@ class FormController {
       return response.status(201).send(formulary)
 
     } catch (error) {
-
-      console.log(error)
 
       return response.status(400).send({
         message: "Erro ao processar solicitação."
@@ -220,9 +227,7 @@ class FormController {
 
         return response.send(formulary)
       } catch (error) {
-
-        console.log(error)
-        
+        // console.log(error)
         return response.status(400).send({
           message: "Erro ao processar solicitação."
         })    

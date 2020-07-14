@@ -171,6 +171,11 @@ class StudentController {
         json_answer
       } = request.all()
 
+      // const query = Answer.query()
+
+      // query.where('period_id', period_id)
+      //   .andWhere('status', true)
+
       let unifiedID = `${period_id}${discipline_id}${professor_id}`
 
       
@@ -188,15 +193,6 @@ class StudentController {
     //   }
 
       const format = JSON.stringify(json_answer)
-      console.log({
-        class_id: unifiedID,
-        period_id, 
-        discipline_id, 
-        formulary_id, 
-        professor_id,
-        verification_id, 
-        json_answer: format,
-      })
 
       let answer = await Answer.create({
         class_id: unifiedID,

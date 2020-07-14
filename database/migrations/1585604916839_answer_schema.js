@@ -36,12 +36,11 @@ class AnswerSchema extends Schema {
         .foreign('formulary_id')
         .references('id')
         .inTable('formularies')
-        .onDelete('cascade')
       table
         .foreign('class_id')
         .references('id')
         .inTable('classes')
-        .onDelete('cascade')
+        //.onDelete('cascade')
     })
     // this.raw("ALTER TABLE `answers` ADD FOREIGN KEY (`discipline_id`) REFERENCES `classes` (`discipline_id`);")
     // this.raw("ALTER TABLE `answers` ADD FOREIGN KEY (`professor_id`) REFERENCES `classes` (`professor_id`);")
