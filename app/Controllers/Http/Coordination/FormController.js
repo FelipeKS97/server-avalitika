@@ -24,28 +24,18 @@ class FormController {
    */
   async index ({ request, response, pagination, transform }) {
     const { page, limit } = pagination
-
     const { period_id, curriculum_id } = request.all()
-    
     const query = Formulary.query()
 
     if(period_id) {
-      query
-        .where('period_id', period_id)
+      query.where('period_id', period_id)
     }
-
     if(curriculum_id) {
-      query
-        .where('curriculum_id', curriculum_id)
+      query.where('curriculum_id', curriculum_id)
     }
-
-    // if(curriculum_id) {
-    //   query
-    //     .where('curriculum_id', curriculum_id)
-    // }
     
-    let formularies = await query.paginate(page, limit)
-    formularies = await transform.paginate(formularies, Transformer)
+    let formularies = await query.fetch() //.paginate(page, limit)
+    formularies = await transform.collection(formularies, Transformer)
 
     return response.send(formularies)
   }
@@ -71,10 +61,6 @@ class FormController {
       let published_at = null
       const published_until = null
       const format = JSON.stringify(json_format)
-
-      // if(status) {
-      //   published_at = new Date.getTime()
-      // }
 
       let formulary = await Formulary.create({ 
         period_id, 
@@ -289,8 +275,9 @@ class FormController {
     if(id) {
       query.where('formulary_id', id)
     }
-    let answers = await query.paginate(page, limit)
-    answers = await transform.paginate(answers, AnswerTransformer)
+    let answers = await query.fetch() //.paginate(page, limit)
+    // answers = await transform.paginate(answers, AnswerTransformer)
+    answers = await transform.collection(answers, AnswerTransformer)
    
     return response.send(answers)
   }

@@ -40,7 +40,6 @@ class ClassController {
         if(!exists) {
           // Adiciona o novo registro no array de inserção de dados no banco
           let unifiedID = `${period_id}${c.discipline_id}${c.professor_id}`;
-  
           insertData.push({ ...c, period_id, id: unifiedID });
         }
       });
@@ -73,7 +72,7 @@ class ClassController {
         }
       });
 
-      insertData.length > 0 ? await Class.createMany(insertData, trx) : []
+      insertData.length > 0 ? await Class.createMany(insertData) : []
       return response.status(201).send();
 
     } catch (error) {

@@ -18,8 +18,7 @@ class InfoController {
     const query = Period.query()
     query.where('status', 1)
     let period = await query.fetch()
-    //period = await transform.paginate(period, Transformer)
-
+    
     return response.send([...period.rows, { course_id: 1 }])
   }
 }

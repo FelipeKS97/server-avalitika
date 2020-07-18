@@ -23,7 +23,7 @@ class StudentController {
     const { page, limit } = pagination
     const query = Course.query()
 
-    let courses = await query.paginate(page, limit)
+    let courses = await query.fetch() //.paginate(page, limit)
     //courses = await transform.paginate(courses, Transformer)
 
     return response.send(courses)
@@ -46,7 +46,7 @@ class StudentController {
     
     query.where('course_id', cID)
     
-    let curricula = await query.paginate(page, limit)
+    let curricula = await query.fetch() //.paginate(page, limit)
     //curricula = await transform.paginate(curricula, Transformer)
     
     return response.send(curricula)
@@ -71,7 +71,7 @@ class StudentController {
     query.where('curriculum_id', cID)
         .andWhere('status', true)
     
-    let formularies = await query.paginate(page, limit)
+    let formularies = await query.fetch() //.paginate(page, limit)
     //formularies = await transform.paginate(formularies, Transformer)
     
     return response.send(formularies)
@@ -96,7 +96,7 @@ class StudentController {
     
     query.where('curriculum_id', cID)
     
-    let disciplines = await query.paginate(page, limit)
+    let disciplines = await query.fetch() //.paginate(page, limit)
     //disciplines = await transform.paginate(disciplines, Transformer)
     
     return response.send(disciplines)
@@ -126,7 +126,7 @@ class StudentController {
         .andWhere('period_id', period_id)
         .andWhere('is_inactive', false)
     
-    let classes = await classQuery.paginate(page, limit)
+    let classes = await classQuery.fetch() //.paginate(page, limit)
     //classes = await transform.paginate(classes, Transformer)
     return response.send(classes)
   }
