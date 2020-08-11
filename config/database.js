@@ -10,6 +10,8 @@ const Url = require('url-parse')
 const NODE_ENV = Env.get('NODE_ENV')
 const CLEARDB_DATABASE_URL = new Url(Env.get('CLEARDB_DATABASE_URL'))
 
+// console.log({CLEARDB_DATABASE_URL})
+
 module.exports = {
   /*
   |--------------------------------------------------------------------------
@@ -23,14 +25,7 @@ module.exports = {
   | configured by heroku for deployment.
   |
   */
-  // connection: Env.get('DB_CONNECTION', 'mysql'),
-  connection: NODE_ENV === 'production' ?  {
-    host: Env.get('DB_HOST', CLEARDB_DATABASE_URL.host),
-    port: Env.get('DB_PORT', ''),
-    user: Env.get('DB_USER', CLEARDB_DATABASE_URL.username),
-    password: Env.get('DB_PASSWORD', CLEARDB_DATABASE_URL.password),
-    database: Env.get('DB_DATABASE', CLEARDB_DATABASE_URL.pathname.substr(1))
-  } : Env.get('DB_CONNECTION', 'mysql'), 
+  connection: Env.get('DB_CONNECTION', 'mysql'),
 
   /*
   |--------------------------------------------------------------------------
@@ -64,14 +59,22 @@ module.exports = {
   */
   mysql: {
     client: 'mysql',
-    connection: {
+    debug: Env.get('DB_DEBUG', false),
+    connection: NODE_ENV === 'production' ? {
+      host: Env.get('DB_HOST', CLEARDB_DATABASE_URL.host),
+      port: Env.get('DB_PORT', ''),
+      user: Env.get('DB_USER', CLEARDB_DATABASE_URL.username),
+      password: Env.get('DB_PASSWORD', CLEARDB_DATABASE_URL.password),
+      database: Env.get('DB_DATABASE', CLEARDB_DATABASE_URL.pathname.substr(1))
+    } 
+      :
+    {
       host: Env.get('DB_HOST', 'localhost'),
       port: Env.get('DB_PORT', ''),
       user: Env.get('DB_USER', 'root'),
       password: Env.get('DB_PASSWORD', ''),
       database: Env.get('DB_DATABASE', 'adonis')
-    },
-    debug: Env.get('DB_DEBUG', false)
+    }
   },
 
   /*
