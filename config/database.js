@@ -61,7 +61,7 @@ module.exports = {
     client: 'mysql',
     debug: Env.get('DB_DEBUG', false),
     connection: NODE_ENV === 'production' ? {
-      host: Env.get('DB_HOST', DEPLOY_DATABASE_URL.host),
+      host: Env.get('DB_HOST', DEPLOY_DATABASE_URL.hostname),
       port: Env.get('DB_PORT', ''),
       user: Env.get('DB_USER', DEPLOY_DATABASE_URL.username),
       password: Env.get('DB_PASSWORD', DEPLOY_DATABASE_URL.password),
