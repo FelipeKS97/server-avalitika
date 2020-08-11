@@ -1,5 +1,10 @@
 'use strict'
 
+/** @type {import('@adonisjs/framework/src/Env')} */
+const Env = use('Env')
+const NODE_ENV = Env.get('NODE_ENV')
+// const ORIGIN = NODE_ENV === 'production' ? ['https://avalitika.herokuapp.com/'] : true 
+
 module.exports = {
   /*
   |--------------------------------------------------------------------------
