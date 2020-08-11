@@ -8,7 +8,7 @@ const Helpers = use('Helpers')
 
 const Url = require('url-parse')
 const NODE_ENV = Env.get('NODE_ENV')
-const CLEARDB_DATABASE_URL = new Url(Env.get('CLEARDB_DATABASE_URL'))
+const CLEARDB_DATABASE_URL = new Url(Env.get('JAWSDB_URL'))
 
 // console.log({CLEARDB_DATABASE_URL})
 
