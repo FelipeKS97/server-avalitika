@@ -7,6 +7,8 @@ const Formulary = use('App/Models/Formulary')
 const Answer = use('App/Models/Answer')
 const Discipline = use('App/Models/Discipline')
 const Database = use('Database')
+const Hash = use('Hash')
+const Encryption = use('Encryption')
 
 class StudentController {
 
@@ -176,36 +178,62 @@ class StudentController {
       // query.where('period_id', period_id)
       //   .andWhere('status', true)
 
-      let unifiedID = `${period_id}${discipline_id}${professor_id}`
-
-      
-    //   let results = await Database
-    //     .select('*')
-    //     .from('answers')
-    //     .where('verification_id', verification_id)
-    //     .where('formulary', formulary)
-    //     .where('period_id', period_id)
-    //     .where('discipline_id', discipline_id)
-    //     .where('professor_id', professor_id)
-
-    //   if(Array.isArray(results) && results.length > 0) {
-
-    //   }
-
-      const format = JSON.stringify(json_answer)
-
-      let answer = await Answer.create({
-        class_id: unifiedID,
+      console.log({ 
         period_id, 
         discipline_id, 
         formulary_id, 
         professor_id,
         verification_id, 
-        json_answer: format,
+        json_answer
       })
-      //answer = await transform.item(answer, Transformer)
-      return response.status(201).send(answer)
 
+      let unifiedID = `${period_id}${discipline_id}${professor_id}`
+
+      const format = JSON.stringify(json_answer)
+      const encripted_verif_id = Encryption.encrypt(verification_id) //await Hash.make(verification_id)
+      console.log({verification_id})
+
+      let answer_register = await Database
+        .select('*')
+        .from('answer_register')
+        //.where('verification_id', encripted_verif_id)
+        .where('formulary_id', formulary_id)
+        .where('period_id', period_id)
+        .where('discipline_id', discipline_id)
+        .where('professor_id', professor_id)
+
+      const hasAnswers = Array.isArray(answer_register) && answer_register.length > 0
+      const hasCheckedAnswer = hasAnswers ? answer_register.some(answer => Encryption.decrypt(answer.verification_id) === verification_id) : false
+      
+      if(hasCheckedAnswer) {
+        console.log("Foi pro 1")
+        return response.status(400).send({
+          message: "Esse professor já tinha sido avaliado. Favor avaliar outro."
+        })
+      } else {
+        await Database
+        .from('answer_register')
+        .insert({
+          class_id: unifiedID,
+          verification_id: encripted_verif_id,
+          formulary_id,
+          period_id,
+          discipline_id,
+          professor_id
+        })
+
+        let answer = await Answer.create({
+          class_id: unifiedID,
+          period_id, 
+          discipline_id, 
+          formulary_id, 
+          professor_id,
+          json_answer: format,
+        })
+        console.log("Foi pro 2, criou")
+        //answer = await transform.item(answer, Transformer)
+        return response.status(201).send(answer)
+      }
     } catch (error) {
 
       return response.status(400).send({

@@ -25,7 +25,6 @@ class AnswerTransformer extends BumblebeeTransformer {
     return {
      // add your transformation object here
      id: model.id,
-     verification_id: model.verification_id,
      json_answer: model.json_answer,
      created_at: model.created_at,
     }

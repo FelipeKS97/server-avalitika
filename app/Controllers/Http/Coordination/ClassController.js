@@ -3,7 +3,7 @@
 const Discipline = use("App/Models/Discipline");
 const Curriculum = use("App/Models/Curriculum");
 const Class = use("App/Models/Class");
-//const { isArrayNotEmpty, isArrayEmpty } = use('App/Helpers')
+const ClassTransformer = use("App/Transformers/Coordination/ClassTransformer");
 
 const Database = use("Database");
 
@@ -94,16 +94,17 @@ class ClassController {
    * @param {TransformWith} ctx.transform
    * @param {Object} ctx.pagination
    */
-  async getClasses({ request, response, pagination }) {
-    const { page, limit } = pagination;
+  async getClasses({ request, response, transform }) {
     const { disc_array, period_id } = request.all();
-
-    let results = await Database.from("classes")
+    const query = Class.query()
       .whereIn("discipline_id", disc_array)
       .andWhere("period_id", period_id)
       .andWhere("is_inactive", false);
 
-    return response.send(results);
+    let classes = await query.fetch();
+    //classes = await transform.collection(classes, ClassTransformer)
+
+    return response.send(classes);
   }
 
   /**
@@ -117,7 +118,6 @@ class ClassController {
    * @param {Object} ctx.pagination
    */
   async listDisciplines({ request, response, pagination }) {
-    const { page, limit } = pagination;
     const cID = request.input("curriculum_id");
     const query = Discipline.query();
 
@@ -141,7 +141,6 @@ class ClassController {
    */
 
   async listCurricula({ request, response, pagination }) {
-    const { page, limit } = pagination;
     const cID = request.input("course_id");
     const query = Curriculum.query();
 

@@ -12,6 +12,7 @@ Route.group(() => {
   Route.get('disciplines', 'ClassController.listDisciplines').as('class.listDisciplines')
   Route.get('curricula', 'ClassController.listCurricula').as('class.listCurricula')
   Route.get('professors', 'ClassController.listProfessors').as('class.listProfessors')
+  Route.get('dashboard', 'DashboardController.answersSummary').as('dashboard.answersSummary')
 
   // SubRotas de Turmas
   Route.get('classes', 'ClassController.getClasses').as('class.getClasses')
