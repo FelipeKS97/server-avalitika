@@ -10,8 +10,6 @@ const Url = require('url-parse')
 const NODE_ENV = Env.get('NODE_ENV')
 const DEPLOY_DATABASE_URL = new Url(Env.get('JAWSDB_URL'))
 
-console.log({DEPLOY_DATABASE_URL})
-
 module.exports = {
   /*
   |--------------------------------------------------------------------------
