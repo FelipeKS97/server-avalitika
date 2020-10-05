@@ -31,7 +31,7 @@ class ClassController {
       let insertData = []
 
       currentClassSet.map((c) => {
-        let exists = outdatedClassSet.some(outdated => 
+        let exists = outdatedClassSet.some(outdated =>
           outdated.discipline_id === c.discipline_id &&
           outdated.professor_id === c.professor_id &&
           outdated.period_id === period_id
@@ -45,7 +45,7 @@ class ClassController {
       });
 
       outdatedClassSet.map(async (o) => {
-        let exists = currentClassSet.some(current => 
+        let exists = currentClassSet.some(current =>
           current.discipline_id === o.discipline_id &&
           current.professor_id === o.professor_id &&
           period_id === o.period_id
@@ -82,10 +82,10 @@ class ClassController {
       });
     }
   }
-  
+
 
   /**
-   * Show a list of all disciplines.
+   * Show a list of all classes.
    * GET classes
    *
    * @param {object} ctx
@@ -93,6 +93,28 @@ class ClassController {
    * @param {Response} ctx.response
    * @param {TransformWith} ctx.transform
    * @param {Object} ctx.pagination
+   * @swagger
+   * /v1/coord/classes:
+   *   get:
+   *     tags:
+   *       - Coordination
+   *     summary: Get actual list of classes in the period.
+   *     parameters:
+   *       - name: disc_array
+   *         description: Array of discipline IDs
+   *         in: query
+   *         required: true
+   *         type: array[int]
+   *       - name: period_id
+   *         description: Period ID from periods.
+   *         in: query
+   *         required: true
+   *         type: int
+   *     responses:
+   *       200:
+   *         description: Actual classes of the listed disciplines.
+   *         example:
+   *           message: Test
    */
   async getClasses({ request, response, transform }) {
     const { disc_array, period_id } = request.all();
