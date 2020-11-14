@@ -21,11 +21,16 @@ const Route = use('Route')
 //   .as('me')
 
 /**
- * Importa as rotas do User Coordenador
+ * Importa as rotas do usuário Coordenador
  */
 require('./coordination')
 
 /**
- * Importa as rotas de Estudante
+ * Importa as rotas de acesso do Estudante
  */
 require('./student')
+
+/**
+ * Importa as rotas para lidar com autenticação
+ */
+require('./auth')
