@@ -19,7 +19,7 @@ class AuthController {
             return response
                 .status(201)
                 .send({data: user})
-            
+
         } catch (error) {
 
             await trx.rollback()
@@ -41,23 +41,22 @@ class AuthController {
 
     async refresh({ request, response, auth }) {
 
-        const refresh_token = request.input('refresh_token') || request.header('refresh_token') 
+        const refresh_token = request.input('refresh_token') || request.header('refresh_token')
 
         const new_token = await auth
             .newRefreshToken()
             .generateForRefreshToken(refresh_token)
 
         return response.send({ data: new_token })
-
     }
 
     async logout({ request, response, auth }){
         const refresh_token = request.input('refresh_token') || request.header('refresh_token')
-        
+
         await auth
             .authenticator('jwt')
             .revokeTokens([refresh_token], true)
-        
+
         return response.status(204).send({})
 
     }
