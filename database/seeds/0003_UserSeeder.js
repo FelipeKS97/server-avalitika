@@ -127,7 +127,7 @@ class UserSeeder {
     const prof13 = await User.create({
       name: "Mônica Ximenes",
       fullname: "Mônica Ximenes",
-      email: 'monica.ximenes@ifal.edu.br',
+      email: 'monica@ifal.edu.br',
       password: 'secret',
     })
 
