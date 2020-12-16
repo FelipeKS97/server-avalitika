@@ -36,37 +36,126 @@ class CourseSeeder {
         course_id: course.id
     })
 
-
-    const discipline1 = await Discipline.create({
-        name: 'Programação Orientada a Objetos',
-        slug: 'PROO',
+    await Discipline.create({
+        name: 'Administração e Projeto de Banco de Dados ',
+        slug: 'APBD',
         curriculum_id: curriculum1.id
     })
 
-    const discipline2 = await Discipline.create({
-        name: 'Algoritmos',
-        slug: 'ALGO',
-        curriculum_id: curriculum1.id
-    })
-
-    const discipline3 = await Discipline.create({
-        name: 'Fundamentos de Programação',
-        slug: 'FPRO',
+    await Discipline.create({
+        name: 'Administração e Projeto de Banco de Dados ',
+        slug: 'APBD',
         curriculum_id: curriculum2.id
     })
 
-    const discipline4 = await Discipline.create({
-        name: 'Matemática Básica',
-        slug: 'MATB',
+    await Discipline.create({
+        name: 'Arquitetura de Computadores ',
+        slug: 'ARQC',
+        curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+        name: 'Arquitetura de Computadores ',
+        slug: 'ARQC',
         curriculum_id: curriculum2.id
     })
 
-    const discipline5 = await Discipline.create({
-        name: 'Fundamentos de Banco de Dados',
-        slug: 'FNBD',
+    await Discipline.create({
+        name: 'Sistemas Operacionais',
+        slug: 'SOPE',
         curriculum_id: curriculum1.id
     })
-    
+
+    await Discipline.create({
+        name: 'Sistemas Operacionais',
+        slug: 'SOPE',
+        curriculum_id: curriculum2.id
+    })
+
+    await Discipline.create({
+        name: 'Governança em Tecnologia da Informação',
+        slug: 'GOTI',
+        curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+        name: 'Governança em Tecnologia da Informação',
+        slug: 'GOTI',
+        curriculum_id: curriculum2.id
+    })
+
+    await Discipline.create({
+        name: 'Interface Humano Computador',
+        slug: 'INHC',
+        curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+        name: 'Interface Humano Computador',
+        slug: 'INHC',
+        curriculum_id: curriculum2.id
+    })
+
+    await Discipline.create({
+      name: 'Marketing',
+      slug: 'PRMK',
+      curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+        name: 'Laboratório de Sistemas Operacionais de Redes',
+        slug: 'LABSO',
+        curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+      name: 'Inteligência Artificial',
+      slug: 'INAR',
+      curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+        name: 'Tópicos Especiais em Sistemas de Informação 1',
+        slug: 'TOSI1',
+        curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+        name: 'Tópicos Especiais em Sistemas de Informação 2',
+        slug: 'TOSI2',
+        curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+      name: 'Empreendedorismo',
+      slug: 'EMPR',
+      curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+      name: 'Fundamento de Redes de Computadores',
+      slug: 'FNRD',
+      curriculum_id: curriculum2.id
+    })
+
+    await Discipline.create({
+      name: 'Introdução à Computação',
+      slug: 'INCO',
+      curriculum_id: curriculum2.id
+    })
+
+    await Discipline.create({
+      name: 'Ética, Computador e Sociedade,',
+      slug: 'ETCS',
+      curriculum_id: curriculum1.id
+    })
+
+    await Discipline.create({
+      name: 'Ética, Computador e Sociedade',
+      slug: 'ETCS',
+      curriculum_id: curriculum2.id
+    })
+
     const period = await Period.create({
         description: '2020.1',
         status: true
