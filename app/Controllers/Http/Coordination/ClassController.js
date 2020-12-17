@@ -31,7 +31,7 @@ class ClassController {
       let insertData = []
 
       currentClassSet.map((c) => {
-        let exists = outdatedClassSet.some(outdated => 
+        let exists = outdatedClassSet.some(outdated =>
           outdated.discipline_id === c.discipline_id &&
           outdated.professor_id === c.professor_id &&
           outdated.period_id === period_id
@@ -45,7 +45,7 @@ class ClassController {
       });
 
       outdatedClassSet.map(async (o) => {
-        let exists = currentClassSet.some(current => 
+        let exists = currentClassSet.some(current =>
           current.discipline_id === o.discipline_id &&
           current.professor_id === o.professor_id &&
           period_id === o.period_id
@@ -82,7 +82,7 @@ class ClassController {
       });
     }
   }
-  
+
 
   /**
    * Show a list of all disciplines.
@@ -157,14 +157,15 @@ class ClassController {
     let results;
     const fullname = request.input("fullname");
     if (fullname) {
-      results = await Database.select("user_id", "name", "fullname", "email")
+      results = await Database
+        .select("*")
         .from("users")
         .where("fullname", "LIKE", `%${fullname}%`)
-        .leftJoin("professors", "users.id", "professors.user_id");
+        .crossJoin("professors", "users.id", "professors.user_id")
     } else {
-      results = await Database.select("user_id", "name", "fullname", "email")
+      results = await Database.select("*")
         .from("users")
-        .leftJoin("professors", "users.id", "professors.user_id");
+        .crossJoin("professors", "users.id", "professors.user_id")
     }
     return response.send(results);
   }

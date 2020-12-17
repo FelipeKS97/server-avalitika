@@ -211,6 +211,9 @@ class UserSeeder {
     const professor15 = await Professor.create({
         user_id: prof15.id
     })
+    const professor16 = await Professor.create({
+        user_id: prof16.id
+    })
   }
 }
 
